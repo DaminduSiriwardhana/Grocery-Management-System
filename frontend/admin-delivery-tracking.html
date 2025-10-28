@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delivery Tracking - Admin Panel</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <style>
+        .delivery-container {
+            padding: 20px;
+        }
+        .delivery-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 20px;
+        }
+        .delivery-header h2 {
+            font-size: 28px;
+            color: #2c3e50;
+            margin: 0;
+        }
+        .btn-refresh {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .btn-refresh:hover {
+            background-color: #2980b9;
+        }
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .stat-card h4 {
+            color: #7f8c8d;
+            margin: 0 0 8px 0;
+            font-size: 12px;
+        }
+        .stat-card .number {
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .delayed-alerts {
+            background-color: #f8d7da;
+            border-left: 4px solid #e74c3c;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .delayed-alerts h3 {
+            margin: 0 0 10px 0;
+            color: #721c24;
+        }
+        .delayed-item {
+            background-color: white;
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 3px;
+            border-left: 3px solid #e74c3c;
+        }
+        .filter-section {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .filter-section select {
+            padding: 10px;
+            border: 1px solid #bdc3c7;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        .delivery-table-wrapper {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow-x: auto;
+        }
+        .delivery-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .delivery-table thead {
+            background-color: #34495e;
+            color: white;
+        }
+        .delivery-table th, .delivery-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        .delivery-table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        .status-pending {
+            background-color: #95a5a6;
+            color: white;
+        }
+        .status-picked_up {
+            background-color: #f39c12;
+            color: white;
+        }
+        .status-in_transit {
+            background-color: #3498db;
+            color: white;
+        }
+        .status-delivered {
+            background-color: #27ae60;
+            color: white;
+        }
+        .status-failed {
+            background-color: #e74c3c;
+            color: white;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        .btn-update, .btn-location, .btn-view {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 11px;
+        }
+        .btn-update {
+            background-color: #9b59b6;
+            color: white;
+        }
+        .btn-update:hover {
+            background-color: #8e44ad;
+        }
+        .btn-location {
+            background-color: #1abc9c;
+            color: white;
+        }
+        .btn-location:hover {
+            background-color: #16a085;
+        }
+        .btn-view {
+            background-color: #3498db;
+            color: white;
+        }
+        .btn-view:hover {
+            background-color: #2980b9;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .modal-header h3 {
+            margin: 0;
+            color: #2c3e50;
+        }
+        .close-btn {
+            font-size: 28px;
+            font-weight: bold;
+            color: #aaa;
+            cursor: pointer;
+        }
+        .close-btn:hover {
+            color: #000;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #2c3e50;
+            font-weight: bold;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #bdc3c7;
+            border-radius: 5px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+        }
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .btn-save {
+            background-color: #27ae60;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn-save:hover {
+            background-color: #229954;
+        }
+        .btn-cancel {
+            background-color: #95a5a6;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn-cancel:hover {
+            background-color: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+    <div class="delivery-container">
+        <div class="delivery-header">
+            <h2>Delivery Tracking</h2>
+            <button class="btn-refresh" onclick="loadDeliveries()">Refresh Data</button>
+        </div>
+
+        <div class="stats-container">
+            <div class="stat-card">
+                <h4>Total Deliveries</h4>
+                <div class="number" id="totalDeliveries">0</div>
+            </div>
+            <div class="stat-card">
+                <h4>Pending</h4>
+                <div class="number" id="pendingDeliveries">0</div>
+            </div>
+            <div class="stat-card">
+                <h4>Picked Up</h4>
+                <div class="number" id="pickedUpDeliveries">0</div>
+            </div>
+            <div class="stat-card">
+                <h4>In Transit</h4>
+                <div class="number" id="inTransitDeliveries">0</div>
+            </div>
+            <div class="stat-card">
+                <h4>Delivered</h4>
+                <div class="number" id="deliveredDeliveries">0</div>
+            </div>
+            <div class="stat-card">
+                <h4>Failed</h4>
+                <div class="number" id="failedDeliveries">0</div>
+            </div>
+        </div>
+
+        <div id="delayedAlertsSection" class="delayed-alerts" style="display: none;">
+            <h3>Delayed Deliveries - Immediate Action Required</h3>
+            <div id="delayedAlertsList"></div>
+        </div>
+
+        <div class="filter-section">
+            <select id="statusFilter" onchange="filterDeliveries()">
+                <option value="">All Status</option>
+                <option value="PENDING">Pending</option>
+                <option value="PICKED_UP">Picked Up</option>
+                <option value="IN_TRANSIT">In Transit</option>
+                <option value="DELIVERED">Delivered</option>
+                <option value="FAILED">Failed</option>
+            </select>
+        </div>
+
+        <div class="delivery-table-wrapper">
+            <table class="delivery-table">
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Delivery Person</th>
+                        <th>Status</th>
+                        <th>Current Location</th>
+                        <th>Delivery Address</th>
+                        <th>Est. Delivery</th>
+                        <th>Minutes Until</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="deliveryTableBody">
+                    <tr>
+                        <td colspan="8" style="text-align: center; color: #7f8c8d;">Loading deliveries...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Update Status Modal -->
+    <div id="statusModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Update Delivery Status</h3>
+                <span class="close-btn" onclick="closeStatusModal()">&times;</span>
+            </div>
+            <form id="statusForm" onsubmit="updateStatus(event)">
+                <input type="hidden" id="statusTrackingId">
+                
+                <div class="form-group">
+                    <label for="newStatus">New Status</label>
+                    <select id="newStatus" required>
+                        <option value="PENDING">Pending</option>
+                        <option value="PICKED_UP">Picked Up</option>
+                        <option value="IN_TRANSIT">In Transit</option>
+                        <option value="DELIVERED">Delivered</option>
+                        <option value="FAILED">Failed</option>
+                    </select>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancel" onclick="closeStatusModal()">Cancel</button>
+                    <button type="submit" class="btn-save">Update Status</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Update Location Modal -->
+    <div id="locationModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Update Delivery Location</h3>
+                <span class="close-btn" onclick="closeLocationModal()">&times;</span>
+            </div>
+            <form id="locationForm" onsubmit="updateLocation(event)">
+                <input type="hidden" id="locationTrackingId">
+                
+                <div class="form-group">
+                    <label for="newLocation">Current Location</label>
+                    <input type="text" id="newLocation" placeholder="e.g., Downtown, Main Street" required>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancel" onclick="closeLocationModal()">Cancel</button>
+                    <button type="submit" class="btn-save">Update Location</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/admin-delivery-tracking.js"></script>
+</body>
+</html>

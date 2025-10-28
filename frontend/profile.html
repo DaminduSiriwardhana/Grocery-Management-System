@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile - GroceryHub</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Navigation Bar -->
+        <nav class="navbar">
+            <div class="navbar-container">
+                <div class="navbar-brand">
+                    <h1>GroceryHub</h1>
+                </div>
+                <ul class="navbar-menu">
+                    <li><a href="index.html">Dashboard</a></li>
+                    <li><a href="index.html#products">Products</a></li>
+                    <li><a href="index.html#orders">Orders</a></li>
+                    <li><a href="index.html#cart">Cart</a></li>
+                </ul>
+                <div class="navbar-user">
+                    <span id="userDisplay">Guest</span>
+                    <button onclick="logout()" class="btn-logout">Logout</button>
+                </div>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <div class="container">
+                <h2>My Profile</h2>
+
+                <div class="profile-container">
+                    <div class="profile-sidebar">
+                        <div class="profile-avatar">
+                            <div class="avatar-placeholder">👤</div>
+                        </div>
+                        <div class="profile-menu">
+                            <button class="profile-menu-btn active" onclick="switchProfileTab('info')">Personal Info</button>
+                            <button class="profile-menu-btn" onclick="switchProfileTab('address')">Addresses</button>
+                            <button class="profile-menu-btn" onclick="switchProfileTab('orders')">Order History</button>
+                            <button class="profile-menu-btn" onclick="switchProfileTab('preferences')">Preferences</button>
+                        </div>
+                    </div>
+
+                    <div class="profile-content">
+                        <!-- Personal Info Tab -->
+                        <div id="infoTab" class="profile-tab active">
+                            <h3>Personal Information</h3>
+                            <form id="profileForm" onsubmit="updateProfile(event)">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Username</label>
+                                        <input type="text" id="profileUsername" readonly>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Email</label>
+                                        <input type="email" id="profileEmail" required>
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Phone Number</label>
+                                        <input type="tel" id="profilePhone">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Role</label>
+                                        <input type="text" id="profileRole" readonly>
+                                    </div>
+                                </div>
+
+                                <div class="form-actions">
+                                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                                    <button type="button" class="btn btn-secondary" onclick="resetProfileForm()">Cancel</button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Addresses Tab -->
+                        <div id="addressTab" class="profile-tab">
+                            <h3>Delivery Addresses</h3>
+                            <button class="btn btn-primary" onclick="openAddressForm()">Add New Address</button>
+
+                            <div class="addresses-list" id="addressesList">
+                                <!-- Addresses will be loaded here -->
+                            </div>
+                        </div>
+
+                        <!-- Order History Tab -->
+                        <div id="ordersTab" class="profile-tab">
+                            <h3>Order History</h3>
+                            <div class="orders-timeline" id="ordersTimeline">
+                                <!-- Orders will be loaded here -->
+                            </div>
+                        </div>
+
+                        <!-- Preferences Tab -->
+                        <div id="preferencesTab" class="profile-tab">
+                            <h3>Preferences</h3>
+                            <form id="preferencesForm" onsubmit="updatePreferences(event)">
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" id="emailNotifications" checked>
+                                        Receive email notifications
+                                    </label>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" id="smsNotifications">
+                                        Receive SMS notifications
+                                    </label>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" id="promotionalEmails" checked>
+                                        Receive promotional emails
+                                    </label>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>
+                                        <input type="checkbox" id="orderUpdates" checked>
+                                        Receive order updates
+                                    </label>
+                                </div>
+
+                                <div class="form-actions">
+                                    <button type="submit" class="btn btn-primary">Save Preferences</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Modal for Address Form -->
+        <div id="addressModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeAddressModal()">&times;</span>
+                <h3>Add New Address</h3>
+                <form id="addressForm" onsubmit="saveAddress(event)">
+                    <div class="form-group">
+                        <label>Address Type</label>
+                        <select id="addressType" required>
+                            <option value="Home">Home</option>
+                            <option value="Work">Work</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Street Address</label>
+                        <input type="text" id="streetAddress" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>City</label>
+                        <input type="text" id="addressCity" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Postal Code</label>
+                        <input type="text" id="addressPostalCode" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="setDefault">
+                            Set as default address
+                        </label>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Save Address</button>
+                        <button type="button" class="btn btn-secondary" onclick="closeAddressModal()">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/profile.js"></script>
+</body>
+</html>

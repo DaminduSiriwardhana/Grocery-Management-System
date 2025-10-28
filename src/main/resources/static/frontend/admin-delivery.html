@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delivery Tracking - GroceryHub Admin</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Navigation Bar -->
+        <nav class="navbar">
+            <div class="navbar-container">
+                <div class="navbar-brand">
+                    <h1>GroceryHub Admin</h1>
+                </div>
+                <ul class="navbar-menu">
+                    <li><a href="admin-dashboard.html">Dashboard</a></li>
+                    <li><a href="admin-stock.html">Stock</a></li>
+                    <li><a href="admin-delivery.html" class="active">Delivery</a></li>
+                    <li><a href="admin-reports.html">Reports</a></li>
+                </ul>
+                <div class="navbar-user">
+                    <span id="userDisplay">Admin</span>
+                    <button onclick="logout()" class="btn-logout">Logout</button>
+                </div>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <div class="container">
+                <h2>Delivery Tracking</h2>
+
+                <div class="delivery-filters">
+                    <select id="statusFilter" onchange="filterDeliveries()">
+                        <option value="">All Status</option>
+                        <option value="PENDING">Pending</option>
+                        <option value="PICKED_UP">Picked Up</option>
+                        <option value="IN_TRANSIT">In Transit</option>
+                        <option value="DELIVERED">Delivered</option>
+                        <option value="FAILED">Failed</option>
+                    </select>
+                    <input type="text" id="deliverySearch" placeholder="Search by order ID..." onkeyup="searchDeliveries()">
+                </div>
+
+                <div class="delivery-overview">
+                    <div class="stat-card">
+                        <h4>Total Deliveries</h4>
+                        <p class="stat-value" id="totalDeliveries">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h4>In Transit</h4>
+                        <p class="stat-value" id="inTransitCount">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Completed Today</h4>
+                        <p class="stat-value" id="completedToday">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Failed Deliveries</h4>
+                        <p class="stat-value warning" id="failedCount">0</p>
+                    </div>
+                </div>
+
+                <div class="delivery-table-container">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Tracking ID</th>
+                                <th>Order ID</th>
+                                <th>Delivery Person</th>
+                                <th>Current Status</th>
+                                <th>Current Location</th>
+                                <th>Estimated Delivery</th>
+                                <th>Actual Delivery</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="deliveryTableBody">
+                            <!-- Deliveries will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+
+        <!-- Update Delivery Modal -->
+        <div id="deliveryModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeDeliveryModal()">&times;</span>
+                <h3>Update Delivery Status</h3>
+                <form id="deliveryForm" onsubmit="updateDelivery(event)">
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select id="deliveryStatus" required>
+                            <option value="PENDING">Pending</option>
+                            <option value="PICKED_UP">Picked Up</option>
+                            <option value="IN_TRANSIT">In Transit</option>
+                            <option value="DELIVERED">Delivered</option>
+                            <option value="FAILED">Failed</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Current Location</label>
+                        <input type="text" id="currentLocation" placeholder="e.g., Downtown District">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Estimated Delivery Time</label>
+                        <input type="datetime-local" id="estimatedTime">
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Update</button>
+                        <button type="button" class="btn btn-secondary" onclick="closeDeliveryModal()">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/admin-delivery.js"></script>
+</body>
+</html>

@@ -1,0 +1,219 @@
+/* Admin Styles */
+.admin-controls {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.admin-controls button {
+  flex-shrink: 0;
+}
+
+.search-bar {
+  flex: 1;
+  min-width: 250px;
+}
+
+.search-bar input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.filter-group {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.filter-group select {
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.stock-overview,
+.delivery-overview,
+.reports-overview {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background-color: white;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 1.5rem;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.stat-card h4 {
+  color: #7f8c8d;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--primary-color);
+}
+
+.stat-value.warning {
+  color: #f39c12;
+}
+
+.stat-value.danger {
+  color: var(--danger-color);
+}
+
+.stock-table-container,
+.delivery-table-container,
+.reports-table-container {
+  overflow-x: auto;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-table th {
+  background-color: var(--dark-color);
+  color: white;
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+}
+
+.admin-table td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.admin-table tr:hover {
+  background-color: var(--light-color);
+}
+
+.admin-table .status-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: bold;
+  display: inline-block;
+}
+
+.status-open {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.status-in_progress {
+  background-color: #f39c12;
+  color: white;
+}
+
+.status-resolved {
+  background-color: #3498db;
+  color: white;
+}
+
+.status-closed {
+  background-color: #2ecc71;
+  color: white;
+}
+
+.priority-low {
+  background-color: #2ecc71;
+  color: white;
+}
+
+.priority-medium {
+  background-color: #f39c12;
+  color: white;
+}
+
+.priority-high {
+  background-color: #e67e22;
+  color: white;
+}
+
+.priority-critical {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.action-buttons button {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+}
+
+.delivery-filters {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.delivery-filters select,
+.delivery-filters input {
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.delivery-filters input {
+  flex: 1;
+  min-width: 250px;
+}
+
+@media (max-width: 768px) {
+  .admin-controls {
+    flex-direction: column;
+  }
+
+  .admin-controls button,
+  .search-bar {
+    width: 100%;
+  }
+
+  .stock-overview,
+  .delivery-overview,
+  .reports-overview {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .admin-table {
+    font-size: 0.9rem;
+  }
+
+  .admin-table th,
+  .admin-table td {
+    padding: 0.75rem;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+  }
+
+  .action-buttons button {
+    width: 100%;
+  }
+}

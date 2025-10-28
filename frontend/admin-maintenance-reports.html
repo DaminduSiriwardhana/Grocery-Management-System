@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maintenance Reports - Admin Panel</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <style>
+        .maintenance-container {
+            padding: 20px;
+        }
+        .maintenance-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 20px;
+        }
+        .maintenance-header h2 {
+            font-size: 28px;
+            color: #2c3e50;
+            margin: 0;
+        }
+        .btn-add-report {
+            background-color: #27ae60;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .btn-add-report:hover {
+            background-color: #229954;
+        }
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .stat-card h4 {
+            color: #7f8c8d;
+            margin: 0 0 8px 0;
+            font-size: 12px;
+        }
+        .stat-card .number {
+            font-size: 28px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .stat-card .number.critical {
+            color: #e74c3c;
+        }
+        .critical-alerts {
+            background-color: #f8d7da;
+            border-left: 4px solid #e74c3c;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .critical-alerts h3 {
+            margin: 0 0 10px 0;
+            color: #721c24;
+        }
+        .critical-item {
+            background-color: white;
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 3px;
+            border-left: 3px solid #e74c3c;
+        }
+        .filter-section {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .filter-section select {
+            padding: 10px;
+            border: 1px solid #bdc3c7;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        .reports-table-wrapper {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow-x: auto;
+        }
+        .reports-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .reports-table thead {
+            background-color: #34495e;
+            color: white;
+        }
+        .reports-table th, .reports-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        .reports-table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+        .status-badge, .priority-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        .status-open {
+            background-color: #e74c3c;
+            color: white;
+        }
+        .status-in_progress {
+            background-color: #f39c12;
+            color: white;
+        }
+        .status-resolved {
+            background-color: #3498db;
+            color: white;
+        }
+        .status-closed {
+            background-color: #27ae60;
+            color: white;
+        }
+        .priority-low {
+            background-color: #2ecc71;
+            color: white;
+        }
+        .priority-medium {
+            background-color: #f39c12;
+            color: white;
+        }
+        .priority-high {
+            background-color: #e67e22;
+            color: white;
+        }
+        .priority-critical {
+            background-color: #e74c3c;
+            color: white;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        .btn-view, .btn-update, .btn-delete {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 11px;
+        }
+        .btn-view {
+            background-color: #3498db;
+            color: white;
+        }
+        .btn-view:hover {
+            background-color: #2980b9;
+        }
+        .btn-update {
+            background-color: #9b59b6;
+            color: white;
+        }
+        .btn-update:hover {
+            background-color: #8e44ad;
+        }
+        .btn-delete {
+            background-color: #e74c3c;
+            color: white;
+        }
+        .btn-delete:hover {
+            background-color: #c0392b;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .modal-header h3 {
+            margin: 0;
+            color: #2c3e50;
+        }
+        .close-btn {
+            font-size: 28px;
+            font-weight: bold;
+            color: #aaa;
+            cursor: pointer;
+        }
+        .close-btn:hover {
+            color: #000;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #2c3e50;
+            font-weight: bold;
+        }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #bdc3c7;
+            border-radius: 5px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .btn-save {
+            background-color: #27ae60;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn-save:hover {
+            background-color: #229954;
+        }
+        .btn-cancel {
+            background-color: #95a5a6;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn-cancel:hover {
+            background-color: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+    <div class="maintenance-container">
+        <div class="maintenance-header">
+            <h2>Maintenance Reports</h2>
+            <button class="btn-add-report" onclick="openAddReportModal()">+ New Report</button>
+        </div>
+
+        <div class="stats-container">
+            <div class="stat-card">
+                <h4>Total Reports</h4>
+                <div class="number" id="totalReports">0</div>
+            </div>
+            <div class="stat-card">
+                <h4>Open</h4>
+                <div class="number" id="openReports">0</div>
+            </div>
+            <div class="stat-card">
+                <h4>In Progress</h4>
+                <div class="number" id="inProgressReports">0</div>
+            </div>
+            <div class="stat-card">
+                <h4>Resolved</h4>
+                <div class="number" id="resolvedReports">0</div>
+            </div>
+            <div class="stat-card">
+                <h4>Critical</h4>
+                <div class="number critical" id="criticalReports">0</div>
+            </div>
+        </div>
+
+        <div id="criticalAlertsSection" class="critical-alerts" style="display: none;">
+            <h3>Critical Issues Requiring Immediate Attention</h3>
+            <div id="criticalAlertsList"></div>
+        </div>
+
+        <div class="filter-section">
+            <select id="statusFilter" onchange="filterReports()">
+                <option value="">All Status</option>
+                <option value="OPEN">Open</option>
+                <option value="IN_PROGRESS">In Progress</option>
+                <option value="RESOLVED">Resolved</option>
+                <option value="CLOSED">Closed</option>
+            </select>
+            <select id="priorityFilter" onchange="filterReports()">
+                <option value="">All Priority</option>
+                <option value="LOW">Low</option>
+                <option value="MEDIUM">Medium</option>
+                <option value="HIGH">High</option>
+                <option value="CRITICAL">Critical</option>
+            </select>
+        </div>
+
+        <div class="reports-table-wrapper">
+            <table class="reports-table">
+                <thead>
+                    <tr>
+                        <th>Report ID</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                        <th>Priority</th>
+                        <th>Reported By</th>
+                        <th>Days Open</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="reportsTableBody">
+                    <tr>
+                        <td colspan="8" style="text-align: center; color: #7f8c8d;">Loading reports...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Add/Edit Report Modal -->
+    <div id="reportModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Create New Report</h3>
+                <span class="close-btn" onclick="closeReportModal()">&times;</span>
+            </div>
+            <form id="reportForm" onsubmit="saveReport(event)">
+                <input type="hidden" id="reportId">
+                
+                <div class="form-group">
+                    <label for="reportType">Report Type</label>
+                    <input type="text" id="reportType" placeholder="e.g., Database Issue, Server Down" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" required></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="status">Status</label>
+                        <select id="status" required>
+                            <option value="OPEN">Open</option>
+                            <option value="IN_PROGRESS">In Progress</option>
+                            <option value="RESOLVED">Resolved</option>
+                            <option value="CLOSED">Closed</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="priority">Priority</label>
+                        <select id="priority" required>
+                            <option value="LOW">Low</option>
+                            <option value="MEDIUM">Medium</option>
+                            <option value="HIGH">High</option>
+                            <option value="CRITICAL">Critical</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancel" onclick="closeReportModal()">Cancel</button>
+                    <button type="submit" class="btn-save">Save Report</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/admin-maintenance-reports.js"></script>
+</body>
+</html>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maintenance Reports - GroceryHub Admin</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Navigation Bar -->
+        <nav class="navbar">
+            <div class="navbar-container">
+                <div class="navbar-brand">
+                    <h1>GroceryHub Admin</h1>
+                </div>
+                <ul class="navbar-menu">
+                    <li><a href="admin-dashboard.html">Dashboard</a></li>
+                    <li><a href="admin-stock.html">Stock</a></li>
+                    <li><a href="admin-delivery.html">Delivery</a></li>
+                    <li><a href="admin-reports.html" class="active">Reports</a></li>
+                </ul>
+                <div class="navbar-user">
+                    <span id="userDisplay">Admin</span>
+                    <button onclick="logout()" class="btn-logout">Logout</button>
+                </div>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <div class="container">
+                <h2>Maintenance Reports</h2>
+
+                <div class="admin-controls">
+                    <button class="btn btn-primary" onclick="openReportForm()">Create Report</button>
+                    <div class="filter-group">
+                        <select id="statusFilter" onchange="filterReports()">
+                            <option value="">All Status</option>
+                            <option value="OPEN">Open</option>
+                            <option value="IN_PROGRESS">In Progress</option>
+                            <option value="RESOLVED">Resolved</option>
+                            <option value="CLOSED">Closed</option>
+                        </select>
+                        <select id="priorityFilter" onchange="filterReports()">
+                            <option value="">All Priority</option>
+                            <option value="LOW">Low</option>
+                            <option value="MEDIUM">Medium</option>
+                            <option value="HIGH">High</option>
+                            <option value="CRITICAL">Critical</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="reports-overview">
+                    <div class="stat-card">
+                        <h4>Total Reports</h4>
+                        <p class="stat-value" id="totalReports">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Open Reports</h4>
+                        <p class="stat-value warning" id="openReports">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h4>In Progress</h4>
+                        <p class="stat-value" id="inProgressReports">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Critical Priority</h4>
+                        <p class="stat-value danger" id="criticalReports">0</p>
+                    </div>
+                </div>
+
+                <div class="reports-table-container">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Report ID</th>
+                                <th>Type</th>
+                                <th>Description</th>
+                                <th>Status</th>
+                                <th>Priority</th>
+                                <th>Reported By</th>
+                                <th>Created Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reportsTableBody">
+                            <!-- Reports will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+
+        <!-- Report Form Modal -->
+        <div id="reportModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeReportModal()">&times;</span>
+                <h3>Create Maintenance Report</h3>
+                <form id="reportForm" onsubmit="saveReport(event)">
+                    <div class="form-group">
+                        <label>Report Type</label>
+                        <select id="reportType" required>
+                            <option value="">Select type</option>
+                            <option value="Equipment">Equipment</option>
+                            <option value="Software">Software</option>
+                            <option value="Infrastructure">Infrastructure</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="reportDescription" required placeholder="Describe the issue..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Priority</label>
+                        <select id="reportPriority" required>
+                            <option value="LOW">Low</option>
+                            <option value="MEDIUM" selected>Medium</option>
+                            <option value="HIGH">High</option>
+                            <option value="CRITICAL">Critical</option>
+                        </select>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Create Report</button>
+                        <button type="button" class="btn btn-secondary" onclick="closeReportModal()">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Update Report Modal -->
+        <div id="updateReportModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeUpdateReportModal()">&times;</span>
+                <h3>Update Report Status</h3>
+                <form id="updateReportForm" onsubmit="updateReport(event)">
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select id="updateStatus" required>
+                            <option value="OPEN">Open</option>
+                            <option value="IN_PROGRESS">In Progress</option>
+                            <option value="RESOLVED">Resolved</option>
+                            <option value="CLOSED">Closed</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Notes</label>
+                        <textarea id="updateNotes" placeholder="Add any notes..."></textarea>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Update</button>
+                        <button type="button" class="btn btn-secondary" onclick="closeUpdateReportModal()">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/admin-reports.js"></script>
+</body>
+</html>
